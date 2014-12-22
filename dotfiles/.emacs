@@ -1,59 +1,61 @@
-;;======= よく忘れがちな便利コマンド =========
-;; tramp
-;; /sudo::/etc/
-;; /ssh:web1:/home/prj01hon
-;; /web1:~
-;; /jikken:~
-;;============= path and packages ================
-;; add to load-path
-(add-to-list 'load-path "~/.emacs.d/site-lisp" )
-
 ;; http://sheephead.homelinux.org/2011/06/17/6724/
 (require 'package)
 ;;リポジトリにMarmaladeを追加
 (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
 ;;インストールするディレクトリを指定
 (setq package-user-dir (concat user-emacs-directory "vendor/elpa"))
 ;;インストールしたパッケージにロードパスを通してロードする
 (package-initialize)
 
-;;======= GIT config ========
-(setenv "GIT_PAGER" "cat")
+;;======= http://futurismo.biz/archives/2213 =======
+;;======= Ruby-mode =========
+(autoload 'ruby-mode "ruby-mode"
+  "Mode for editing ruby source files" t)
+(add-to-list 'auto-mode-alist '("\\.rb$latex " . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.rake" . ruby-mode))
+(add-to-list 'auto-mode-alist '("Capfile$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("Gemfile$" . ruby-mode))
+(defun ruby-mode-set-encoding () nil)
+(setq ruby-insert-encoding-magic-comment nil)
 
-;;=============Global Keymap =====================
-;;==== 鬼軍曹 =========
-;; https://github.com/k1LoW/emacs-drill-instructor
-;; (require 'drill-instructor)
-;; (setq drill-instructor-global t)
+;;===== ruby-electric =====
+;;(require 'ruby-electric)
+;;(add-hook 'ruby-mode-hook '(lambda () (ruby-electric-mode t)))
+;;(setq ruby-electric-expand-delimiters-list nil)
 
-;; C-h as backspace
-(global-set-key "\C-h" 'delete-backward-char)
-;; M-h as backspace for word
-;; http://d.hatena.ne.jp/akisute3/
-(global-set-key (kbd "M-h") 'backward-kill-word)
+;; ruby-block.el --- highlight matching block
+;;(require 'ruby-block)
+;;(ruby-block-mode t)
+;;(setq ruby-block-highlight-toggle t)
 
-;; C-M-%が使えないので、代替。
-(global-set-key "\M-$" 'replace-regexp)
-
-;; http://flex.ee.uec.ac.jp/texi/faq-jp/faq-jp_79.html
-;; override mark-whole-buffer
-(global-set-key "\C-ch" 'help-command)
-
-;; disable toggle-input-method
-(global-unset-key "\C-\\")
-
-;;
+;;=====便利コマンド=====
 (global-set-key "\M-g" 'goto-line)
-
 (defun revert-buffer-force()
   (interactive)
   (revert-buffer nil t)
 )
 (global-set-key "\C-cv" 'revert-buffer-force)
 
+;;=======web-mode========
+(require 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.[gj]sp\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+;;; インデント数
+(defun web-mode-hook ()
+  "Hooks for Web mode."
+  (setq web-mode-markup-indent-offset 4)
+  (setq tab-width web-mode-markup-indent-offset)
+  (setq indent-tabs-mode t))
+(add-hook 'web-mode-hook 'web-mode-hook)
 
 ;;=============Global Options =====================
-
 ;; http://tech.kayac.com/archive/emacs.html
 (setq make-backup-files nil)
 
@@ -70,6 +72,13 @@
 
 ;; iswitchb-mode on
 (iswitchb-mode t)
+;;; C-f, C-b, C-n, C-p で候補を切り替えることができるように。
+(add-hook 'iswitchb-define-mode-map-hook
+      (lambda ()
+        (define-key iswitchb-mode-map "\C-n" 'iswitchb-next-match)
+        (define-key iswitchb-mode-map "\C-p" 'iswitchb-prev-match)
+        (define-key iswitchb-mode-map "\C-f" 'iswitchb-next-match)
+        (define-key iswitchb-mode-map "\C-b" 'iswitchb-prev-match)))
 
 ;; Language settings
 (set-language-environment 'Japanese)
@@ -77,13 +86,17 @@
 (set-keyboard-coding-system 'utf-8-unix)
 (set-terminal-coding-system 'utf-8-unix)
 
-
 ;; colorize region  http://blog.livedoor.jp/t100life/archives/51680860.html
 (transient-mark-mode 1)
 
 ;; disable tab
 (custom-set-variables
- '(indent-tabs-mode nil))
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(indent-tabs-mode nil)
+ '(safe-local-variable-values (quote ((encoding . utf-8)))))
 
 ;; show line-number
 (line-number-mode t)
@@ -153,9 +166,6 @@
       )
 (ansi-color-for-comint-mode-on)
 
-
-;; keybind for find-grep
-
 ;; Show tab, zenkaku-space, white spaces at end of line
 ;; http://openlab.dino.co.jp/wp-content/uploads/2008/07/dotemacs-show-white-spaces.txt
 ;; http://www.bookshelf.jp/soft/meadow_26.html#SEC317
@@ -183,225 +193,6 @@
                (font-lock-mode t)
                (font-lock-fontify-buffer))))
 
-
-
-;;=============== HTML mode ===============
-
-;; 拡張子tplのファイルはhtml-modeで開く
-;;http://blog.livedoor.jp/ubuntumini/archives/51253507.html
-(setq auto-mode-alist
-      (cons (cons "\\.tpl$" 'html-mode) auto-mode-alist))
-
-
-
-;; Settings For php-mode
-
-;; require php-mode
-;; (load-library "php-mode")
-;; (require 'php-mode)
-(autoload 'php-mode "php-mode" "Major mode for editing php code." t)
-(add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
-(add-to-list 'auto-mode-alist '("\\.inc$" . php-mode))
-
-(setq interpreter-mode-alist
-      (cons '("php" . php-mode)
-            interpreter-mode-alist))
-
-
-
-;; http://www.phppro.jp/phptips/archives/vol5/
-(add-hook 'php-mode-user-hook
-          '(lambda ()
-             (define-abbrev php-mode-abbrev-table "ex" "extends")
-             (c-set-style "stroustrup")
-             (c-set-offset 'comment-intro 0)
-             (setq tab-width 4)
-             (setq c-basic-offset 4)
-             (setq c-hanging-comment-ender-p nil)
-             (setq php-mode-force-pear t)
-             (setq indent-tabs-mode nil)
-             (setq php-manual-path "/home/userdqn/php/doc/html")
-             (setq php-manual-url "http://www.phppro.jp/phpmanual/")
-             )
-
-          )
-
-
-(add-hook 'php-mode-hook
-  '(lambda ()
-     (c-set-style "stroustrup")
-     (setq php-manual-path "/home/userdqn/php/doc/html")
-     (setq php-search-url "http://www.phppro.jp/")
-     (setq php-manual-url "http://www.phppro.jp/phpmanual")
-     ))
-
-;; js2-mode
-(autoload 'js2-mode "js2-mode" nil t)
-(add-to-list 'auto-mode-alist '("\\.\\(js\\|json\\|js\\.erb\\|js\\.coffee\\)$" . js2-mode))
-
-;; js2-modeのインデント問題を回避するhack
-;; http://16777215.blogspot.jp/2011/05/emacs23-js2-mode-without-espresso.html
-(autoload 'js-mode "js")
-(defun my-js2-indent-function ()
-  (interactive)
-  (save-restriction
-    (widen)
-    (let* ((inhibit-point-motion-hooks t)
-           (parse-status (save-excursion (syntax-ppss (point-at-bol))))
-           (offset (- (current-column) (current-indentation)))
-           (indentation (js--proper-indentation parse-status))
-           node)
-      (save-excursion
-        ;; I like to indent case and labels to half of the tab width
-        (back-to-indentation)
-        (if (looking-at "case\\s-")
-            (setq indentation (+ indentation (/ js-indent-level 2))))
-        ;; consecutive declarations in a var statement are nice if
-        ;; properly aligned, i.e:
-        ;; var foo = "bar",
-        ;;     bar = "foo";
-        (setq node (js2-node-at-point))
-        (when (and node
-                   (= js2-NAME (js2-node-type node))
-                   (= js2-VAR (js2-node-type (js2-node-parent node))))
-          (setq indentation (+ 4 indentation))))
-      (indent-line-to indentation)
-      (when (> offset 0) (forward-char offset)))))
-
-(defun my-indent-sexp ()
-  (interactive)
-  (save-restriction
-    (save-excursion
-      (widen)
-      (let* ((inhibit-point-motion-hooks t)
-             (parse-status (syntax-ppss (point)))
-             (beg (nth 1 parse-status))
-             (end-marker (make-marker))
-             (end (progn (goto-char beg) (forward-list) (point)))
-             (ovl (make-overlay beg end)))
-        (set-marker end-marker end)
-        (overlay-put ovl 'face 'highlight)
-        (goto-char beg)
-        (while (< (point) (marker-position end-marker))
-          ;; don't reindent blank lines so we don't set the "buffer
-          ;; modified" property for nothing
-          (beginning-of-line)
-          (unless (looking-at "\\s-*$")
-            (indent-according-to-mode))
-          (forward-line))
-        (run-with-timer 0.5 nil '(lambda(ovl)
-                                   (delete-overlay ovl)) ovl)))))
-(defun my-js2-mode-hook ()
-  (require 'js)
-  (setq js-indent-level 2
-        indent-tabs-mode nil
-        c-basic-offset 2)
-  (c-toggle-auto-state 0)
-  (c-toggle-hungry-state 1)
-  (set (make-local-variable 'indent-line-function) 'my-js2-indent-function)
-;  (define-key js2-mode-map [(meta control |)] 'cperl-lineup)
-  (define-key js2-mode-map [(meta control \;)]
-    '(lambda()
-       (interactive)
-       (insert "/* -----[ ")
-       (save-excursion
-         (insert " ]----- */"))
-       ))
-  (define-key js2-mode-map [(return)] 'newline-and-indent)
-  (define-key js2-mode-map [(backspace)] 'c-electric-backspace)
-  (define-key js2-mode-map [(control d)] 'c-electric-delete-forward)
-  (define-key js2-mode-map [(control meta q)] 'my-indent-sexp)
-  (if (featurep 'js2-highlight-vars)
-    (js2-highlight-vars-mode))
-  (message "My JS2 hook"))
-
-(add-hook 'js2-mode-hook 'my-js2-mode-hook)
-
-;; exec current test file
-(defun prove-quiet()
-  (interactive)
-  (shell-command
-   (concat "prove -Q  " (file-name-nondirectory (buffer-file-name)))))
-
-;; (define-key php-mode-map "\C-cq" 'prove-quiet)
-
-
-;; run current file
-(defun run-file()
-  (interactive)
-  (shell-command
-   (concat "./" (file-name-nondirectory (buffer-file-name)))))
-
-(global-set-key  "\C-cr" 'run-file)
-
-;; run test
-(defun run-test()
-  (interactive)
-  (shell-command
-   ( buffer-file-name)))
-;; (define-key php-mode-map "\C-ct" 'run-test)
-
-
-(defun my-php-mode ()
-  (c-toggle-hungry-state 1))
-(add-hook 'php-mode-user-hook 'my-php-mode)
-
-;; http://www.namazu.org/~tsuchiya/elisp/index.html#script
-(autoload 'ansi-color-for-comint-mode-on "ansi-color"
-          "Set `ansi-color-for-comint-mode' to t." t)
-(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
-
-
-;; ============= svn-mv-this ===================
-;; http://www.bookshelf.jp/texi/elisp-intro/jp/emacs-lisp-intro_5.html#SEC53
-(defun svn-mv-this(file)
-  ;;(cd (file-name-nondirectory (buffer-file-name))
-  (interactive "Fsvn mv to:")
-  ;;(message (concat "svn mv  " (buffer-file-name) " " file))
-  (shell-command   (concat "svn mv  " (buffer-file-name) " " file))
-)
-(global-set-key "\C-xvm" 'svn-mv-this)
-
-
-
-
-(require 'uniquify)
-(setq uniquify-buffer-name-style 'post-forward-angle-brackets)
-
-;; 再帰的にファイルを検索させて、etags を実行させる。
-(defun etags-find (dir pattern)
-  " find DIR -name 'PATTERN' |etags -"
-  (interactive
-   "DFind-name (directory): \nsFind-name (filename wildcard): ")
-  (shell-command
-   (concat "find " dir " -type f -name \"" pattern "\" | etags -")))
-
-
-
-;; http://www.bookshelf.jp/soft/meadow_30.html#SEC405
-;; exchange right <->left window
-
-(defun swap-screen()
-  "Swap two screen,leaving cursor at current window."
-  (interactive)
-  (let ((thiswin (selected-window))
-        (nextbuf (window-buffer (next-window))))
-    (set-window-buffer (next-window) (window-buffer))
-    (set-window-buffer thiswin nextbuf)))
-(defun swap-screen-with-cursor()
-  "Swap two screen,with cursor in same buffer."
-  (interactive)
-  (let ((thiswin (selected-window))
-        (thisbuf (window-buffer)))
-    (other-window 1)
-    (set-window-buffer thiswin (window-buffer))
-    (set-window-buffer (selected-window) thisbuf)))
-(global-set-key [f2] 'swap-screen)
-(global-set-key [S-f2] 'swap-screen-with-cursor)
-
-(global-set-key "\C-cx" 'swap-screen)
-
-
 ;; chmod +x as you save it
 ;; http://www.namazu.org/~tsuchiya/elisp/index.html#chmod
 (defun make-file-executable ()
@@ -416,14 +207,29 @@
                 (message (concat "Wrote " name " (+x)"))))))))
 (add-hook 'after-save-hook 'make-file-executable)
 
-
-;; dsvn.el
-;; http://dev.ariel-networks.com/Members/matsuyama/dsvn
-
-(autoload 'svn-status "dsvn" "Run `svn status'." t)
-(autoload 'svn-update "dsvn" "Run `svn update'." t)
-
-(put 'set-goal-column 'disabled nil)
+;;======== スペース・タブ文字まわり ==========
+;;======== http://d.hatena.ne.jp/syohex/20110119/1295450495 ==========
+;; for whitespace-mode
+(require 'whitespace)
+;; see whitespace.el for more details
+(setq whitespace-style '(face tabs tab-mark spaces space-mark))
+(setq whitespace-display-mappings
+      '((space-mark ?\u3000 [?\u25a1])
+        ;; WARNING: the mapping below has a problem.
+        ;; When a TAB occupies exactly one column, it will display the
+        ;; character ?\xBB at that column followed by a TAB which goes to
+        ;; the next TAB column.
+        ;; If this is a problem for you, please, comment the line below.
+        (tab-mark ?\t [?\xBB ?\t] [?\\ ?\t])))
+(setq whitespace-space-regexp "\\(\u3000+\\)")
+(set-face-foreground 'whitespace-tab "#adff2f")
+(set-face-background 'whitespace-tab 'nil)
+(set-face-underline  'whitespace-tab t)
+(set-face-foreground 'whitespace-space "#7cfc00")
+(set-face-background 'whitespace-space 'nil)
+(set-face-bold-p 'whitespace-space t)
+(global-whitespace-mode 1)
+(global-set-key (kbd "C-x w") 'global-whitespace-mode)
 
 ;;=============== shell-pop ===============
 ;; https://github.com/kyagi/shell-pop-el
@@ -436,26 +242,99 @@
   (message (buffer-file-name))
   )
 (global-set-key  "\C-cp" 'show-file-path)
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
 
+;;==== cua mode ====
+;;==== http://tech.kayac.com/archive/emacs-rectangle.html ====
+(cua-mode t)
+(setq cua-enable-cua-keys nil) ; そのままだと C-x が切り取りになってしまったりするので無効化
+(define-key global-map (kbd "M-SPC") 'cua-set-rectangle-mark)
 
-;;======= yasnippet ===================
-;;https://github.com/capitaomorte/yasnippet
-;;(put 'upcase-region 'disabled nil)
-;;(put 'scroll-left 'disabled nil)
+;; ==== ag ====
+;; ==== http://codeout.hatenablog.com/entry/2014/07/08/185826 ====
+; ag
+;;(setq default-process-coding-system 'utf-8-unix)  ; ag 検索結果のエンコード指定
+(require 'ag)
+(setq ag-highlight-search t)  ; 検索キーワードをハイライト
+(setq ag-reuse-buffers t)     ; 検索用バッファを使い回す (検索ごとに新バッファを作らない)
 
-;; ============ Programming Launaguage Support ===================
-;;  flymake いったんやめる
-;; http://e-arrows.sakura.ne.jp/2010/02/vim-to-emacs.html
+; wgrep
+(add-hook 'ag-mode-hook '(lambda ()
+                           (require 'wgrep)
+                           (require 'wgrep-ag)
+                           (setq wgrep-auto-save-buffer t)  ; 編集完了と同時に保存
+                           (setq wgrep-enable-key "r")      ; "r" キーで編集モードに
+                           (wgrep-ag-setup)))
 
-;; ============# -*- coding: utf-8 -*- を入れないようにする=============
-;; from http://d.hatena.ne.jp/akm/20080605#1212644489
-(require 'ruby-mode)
-(defun ruby-mode-set-encoding () ())
+(autoload 'wgrep-ag-setup "wgrep-ag")
+(add-hook 'ag-mode-hook 'wgrep-ag-setup)
 
-;; 分割ウィンドウを矢印キーで移動
-;; http://www.emacswiki.org/emacs/WindMove
-(windmove-default-keybindings)
-(global-set-key "\M-N"  'windmove-left)
-(global-set-key "\M-n"  'windmove-down)
-(global-set-key "\M-p"    'windmove-up)
-(global-set-key "\M-P" 'windmove-right)
+;;;###autoload
+(defun wgrep-ag-setup ()
+  ;; ag.el prints a column number too, so we catch that
+  ;; if it exists.  Here \2 is a colon + whitespace separator.  This
+  ;; might need to change if (caar grep-regexp-alist) does.
+  (set (make-local-variable 'wgrep-line-file-regexp)
+       (concat
+        (caar grep-regexp-alist)
+        "\\(?:\\([1-9][0-9]*\\)\\2\\)?"))
+  (wgrep-setup-internal))
+
+;;;###autoload
+(add-hook 'ag-mode-hook 'wgrep-ag-setup)
+
+;; For `unload-feature'
+(defun wgrep-ag-unload-function ()
+  (remove-hook 'ag-mode-hook 'wgrep-ag-setup))
+
+(provide 'wgrep-ag)
+
+;;=== window resizer ===
+;;=== http://d.hatena.ne.jp/khiker/20100119/window_resize ===
+(global-set-key "\C-c\C-r" 'my-window-resizer)
+(defun my-window-resizer ()
+  "Control window size and position."
+  (interactive)
+  (let ((window-obj (selected-window))
+        (current-width (window-width))
+        (current-height (window-height))
+        (dx (if (= (nth 0 (window-edges)) 0) 1
+              -1))
+        (dy (if (= (nth 1 (window-edges)) 0) 1
+              -1))
+        action c)
+    (catch 'end-flag
+      (while t
+        (setq action
+              (read-key-sequence-vector (format "size[%dx%d]"
+                                                (window-width)
+                                                (window-height))))
+        (setq c (aref action 0))
+        (cond ((= c ?l)
+               (enlarge-window-horizontally dx))
+              ((= c ?h)
+               (shrink-window-horizontally dx))
+              ((= c ?j)
+               (enlarge-window dy))
+              ((= c ?k)
+               (shrink-window dy))
+              ;; otherwise
+              (t
+               (let ((last-command-char (aref action 0))
+                     (command (key-binding action)))
+                 (when command
+                   (call-interactively command)))
+               (message "Quit")
+               (throw 'end-flag t)))))))
+
+;;=== window move ===
+;;=== http://www.emacswiki.org/emacs/WindMove ===
+(global-set-key (kbd "M-N")  'windmove-left)
+(global-set-key (kbd "M-P") 'windmove-right)
+(global-set-key (kbd "M-p")    'windmove-up)
+(global-set-key (kbd "M-n")  'windmove-down)

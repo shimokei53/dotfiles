@@ -1,24 +1,18 @@
-;; http://sakito.jp/emacs/emacs24.html#id9
-;; 
-;; Emacs24 では Emacs Lips パッケージの管理機能が追加されています。
-;; M-x list-packages でインストール可能なパッケージ一覧が表示されます。
-;; インストールしたいパッケージで i を押すとインストール候補になり、 x でインストールを実行するか確認されますので、 yes でインストールします。
-;; インストールしたパッケージはデフォルトでは .emacs.d/elpa/ に保存されます。
-;; 初期設定ではパッケージ一覧は http://elpa.gnu.org/packages/ から取得しますが、追加することも可能です。
-;; 現在以下の二つのURLが安定して利用できます。
-;; http://melpa.milkbox.net/
-;; http://marmalade-repo.org/
+;;===== add MELPA=====
 (require 'package)
-(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
-(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
-(package-initialize)
+(add-to-list 'package-archives
+  '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
-;; add to load-path
-(add-to-list 'load-path "~/.emacs.d/site-lisp" )
+;; ~/.emacs.d/site-lisp 以下全部読み込み
+(let ((default-directory (expand-file-name "~/.emacs.d/site-lisp")))
+  (add-to-list 'load-path default-directory)
+  (if (fboundp 'normal-top-level-add-subdirs-to-load-path)
+      (normal-top-level-add-subdirs-to-load-path)))
 
-;; http://tech.kayac.com/archive/emacs.html
-(setq make-backup-files nil)
+(require 'init-loader)
+(setq init-loader-show-log-after-init nil)
+(init-loader-load "~/.emacs.d/inits")
 
-;;====== shell-pop.el ===========
-(require 'shell-pop)
-(shell-pop-set-universal-key [f8])
+;; http://qiita.com/maangie/items/5a80ae50c13d14368a72
+(let ((gls "/usr/local/bin/gls"))
+  (if (file-exists-p gls) (setq insert-directory-program gls)))
