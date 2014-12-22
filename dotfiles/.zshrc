@@ -1,5 +1,5 @@
 # set locale
-export LANG=ja_JP.utf8
+# export LANG=ja_JP.utf8
 
 # http://journal.mycom.co.jp/column/zsh/001/index.html
 autoload -U compinit
@@ -52,7 +52,7 @@ alias ll='ls -laF --show-control-char --color=always'
 alias -g M='| more'
 
 # セッション保存先の設定
-export SCREENDIR=/home/smd/.screens
+export SCREENDIR=~/.screens
 
 # aliases for Git
 # http://qiita.com/items/1f01aa09ccf148542f21
@@ -87,7 +87,7 @@ alias gsl='git stash list'
 # alias的に使う関数群
 gcm () { git commit -m "$*" }
 gsp () { git stash pop stash@{"$*"} }
-review () { git diffw origin/trunk..."$1" }
+# review () { git diffw origin/trunk..."$1" }
 pr () {
     # "組織名/プロジェクト名"を取得。e.g. sen-corporation/8122
     org_repo_name=$( git config --get remote.origin.url  | sed -e s#git@github.com:## | sed -e s#.git## )
@@ -144,6 +144,8 @@ precmd () {
     psvar[1]=$vcs_info_msg_0_
 }
 
+# for screen
+alias sc='screen'
 
 #PROMPT="%n:%/%1(v|%F{green}%1v%f|)%% "
 
