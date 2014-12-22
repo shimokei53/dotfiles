@@ -166,3 +166,4 @@ stty stop undef
 cd $BASE
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+PATH=$HOME/.rbenv/shims:$PATH # http://qiita.com/omega999/items/5dbea9571efad07754ae
