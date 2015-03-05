@@ -64,9 +64,9 @@ alias ga='git add'
 alias gb='git branch'
 alias gci='git commit'
 alias gcim='git commit -m'
-alias gdi='git diff | colordiff'
-alias gd='git diff | colordiff'
-alias gdc="git diff --cached | colordiff"
+alias gdi='git diff | colordiff | less -r'
+alias gd='git diff | colordiff | less -r'
+alias gdc="git diff --cached | colordiff | less -r"
 alias gdw='git diff --word-diff'
 alias gdw-regex="git diff --color-words --word-diff-regex='\\w+|[^[:space:]]'"
 alias gbr='git branch'
@@ -147,6 +147,9 @@ precmd () {
 # for screen
 alias sc='screen'
 
+# for nano 2.3.2
+alias nano='/usr/local/bin/nano'
+
 #PROMPT="%n:%/%1(v|%F{green}%1v%f|)%% "
 
 
@@ -167,3 +170,12 @@ cd $BASE
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 PATH=$HOME/.rbenv/shims:$PATH # http://qiita.com/omega999/items/5dbea9571efad07754ae
+
+#=============================
+# source zsh-syntax-highlighting
+# $ mkdir ~/.zsh
+# $ git clone git://github.com/zsh-users/zsh-syntax-highlighting.git ~/.zsh/zsh-syntax-highlighting
+#=============================
+if [ -f ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
+  source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
