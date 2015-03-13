@@ -166,8 +166,6 @@ PROMPT="%n%F{yellow}@%m%f:%/%1(v|%F{green}%1v%f|)%% "
 # XOFF を無効化
 stty stop undef
 
-cd $BASE
-
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 PATH=$HOME/.rbenv/shims:$PATH # http://qiita.com/omega999/items/5dbea9571efad07754ae
 
@@ -182,7 +180,8 @@ fi
 
 # よく使うディレクトリへエイリアスを張る
 # http://qiita.com/usamik26/items/18591c9f870fcdd0d003
-hash -d ow=/Users/shimoda/owners/skiyaki_owners
+# hash -d .="/Users/shimoda/owners/skiyaki_owners"
+alias cdd='cd $(git rev-parse --show-toplevel)'
 
 # pull request検索へのエイリアス
 function prsearch () {
