@@ -179,3 +179,12 @@ PATH=$HOME/.rbenv/shims:$PATH # http://qiita.com/omega999/items/5dbea9571efad077
 if [ -f ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
   source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
+
+# よく使うディレクトリへエイリアスを張る
+# http://qiita.com/usamik26/items/18591c9f870fcdd0d003
+hash -d ow=/Users/shimoda/owners/skiyaki_owners
+
+# pull request検索へのエイリアス
+function prsearch () {
+  open "https://github.com/skiyaki/skiyaki_owners/pulls?q=$1"
+}
