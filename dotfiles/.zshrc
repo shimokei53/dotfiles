@@ -174,9 +174,9 @@ PATH=$HOME/.rbenv/shims:$PATH # http://qiita.com/omega999/items/5dbea9571efad077
 # $ mkdir ~/.zsh
 # $ git clone git://github.com/zsh-users/zsh-syntax-highlighting.git ~/.zsh/zsh-syntax-highlighting
 #=============================
-if [ -f ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
-  source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-fi
+#if [ -f ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
+#  source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+#fi
 
 # よく使うディレクトリへエイリアスを張る
 # http://qiita.com/usamik26/items/18591c9f870fcdd0d003
@@ -185,5 +185,25 @@ alias cdd='cd $(git rev-parse --show-toplevel)'
 
 # pull request検索へのエイリアス
 function prsearch () {
-  open "https://github.com/skiyaki/skiyaki_owners/pulls?q=$1"
+  open "https://github.com/skiyaki/skiyaki/pulls?q=$1"
 }
+
+# 突然の死コマンドへのエイリアス
+alias sd='echo-sd'
+alias sdv='echo-sd -v'
+alias sdp='echo-sd -p1'
+
+# pbcopy
+alias -g P='| pbcopy'
+
+# for hub
+# https://github.com/github/hub
+eval "$(hub alias -s)"
+compdef hub=git
+
+# zsh起動時にscreenも起動
+# http://qiita.com/fieldville/items/e24500165be947db8eaa
+[[ -z "$WINDOW" && ! -z "$PS1" ]] && screen -U
+
+# cd main dir
+cd ~/ascreed
