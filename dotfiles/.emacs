@@ -37,6 +37,23 @@
 )
 (global-set-key "\C-cv" 'revert-buffer-force)
 
+;;=============== php-mode ===============
+;; require php-mode
+(load-library "php-mode")
+(require 'php-mode)
+
+(setq interpreter-mode-alist
+      (cons '("php" . php-mode)
+            interpreter-mode-alist))
+
+(add-hook 'php-mode-hook 'php-enable-psr2-coding-style)
+;;php-modeのタブ設定
+(add-hook 'php-mode-user-hook
+  '(lambda ()
+    (setq tab-width 4)
+    (setq c-basic-offset 4)
+    (setq indent-tabs-mode nil)))
+
 ;;=======web-mode========
 (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
@@ -51,8 +68,10 @@
 (defun web-mode-hook ()
   "Hooks for Web mode."
   (setq web-mode-markup-indent-offset 4)
-  (setq tab-width web-mode-markup-indent-offset)
-  (setq indent-tabs-mode t))
+;;(setq tab-width web-mode-markup-indent-offset)
+;;(setq indent-tabs-mode t)
+  (setq web-mode-enable-auto-pairing f)
+)
 (add-hook 'web-mode-hook 'web-mode-hook)
 
 ;;=============Global Options =====================
@@ -207,6 +226,9 @@
                 (message (concat "Wrote " name " (+x)"))))))))
 (add-hook 'after-save-hook 'make-file-executable)
 
+;; disable C-x C-n
+(put 'set-goal-column 'disabled nil)
+
 ;;======== スペース・タブ文字まわり ==========
 ;;======== http://d.hatena.ne.jp/syohex/20110119/1295450495 ==========
 ;; for whitespace-mode
@@ -338,3 +360,29 @@
 (global-set-key (kbd "M-P") 'windmove-right)
 (global-set-key (kbd "M-p")    'windmove-up)
 (global-set-key (kbd "M-n")  'windmove-down)
+
+;;=== yasnippet ===
+;;=== http://konbu13.hatenablog.com/entry/2014/01/12/113300 ===
+(add-to-list 'load-path
+             (expand-file-name "~/.emacs.d/site-lisp/yasnippet"))
+(require 'yasnippet)
+(setq yas-snippet-dirs
+      '("~/.emacs.d/site-lisp/yasnippet-snippets"
+        ))
+
+;; yas起動
+(yas-global-mode 1)
+
+;;=== vc-mode ===
+;;=== http://www.clear-code.com/blog/2012/4/3.html ===
+;; 文字単位での変更箇所は色を反転して強調
+(defun diff-mode-setup-faces ()
+(set-face-attribute 'diff-refine-change nil
+                    :foreground nil :background nil
+                    :weight 'bold :inverse-video t))
+
+;; diffを表示したらすぐに文字単位での強調表示も行う
+(defun diff-mode-refine-automatically ()
+  (diff-auto-refine-mode t))
+(add-hook 'diff-mode-hook 'diff-mode-refine-automatically)
+(put 'set-goal-column 'disabled nil)
