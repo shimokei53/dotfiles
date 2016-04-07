@@ -35,9 +35,6 @@ unsetopt promptcr
 # ..で上へあがれて便利。
 setopt auto_cd
 
-# 右側プロンプトはコピペするときに邪魔なのでやめる。
-#RPROMPT="[%~]"
-
 # Path
 PATH=$PATH:/home/smd/bin:$HOME/bin:/usr/local/bin:$HOME/local/bin:/usr/local/heroku/bin:
 
@@ -132,6 +129,11 @@ function extract() {
 }
 alias -s {gz,tgz,zip,lzh,bz2,tbz,Z,tar,arj,xz}=extract
 
+# for screen
+alias sc='screen'
+
+# for nano 2.3.2
+alias nano='/usr/local/bin/nano'
 
 # for Git
 # http://d.hatena.ne.jp/mollifier/20100906/p1
@@ -145,14 +147,14 @@ precmd () {
     psvar[1]=$vcs_info_msg_0_
 }
 
-# for screen
-alias sc='screen'
-
-# for nano 2.3.2
-alias nano='/usr/local/bin/nano'
-
-#PROMPT="%n:%/%1(v|%F{green}%1v%f|)%% "
-
+# see http://tkengo.github.io/blog/2013/05/12/zsh-vcs-info/
+# setopt prompt_subst
+# zstyle ':vcs_info:git:*' check-for-changes true
+# zstyle ':vcs_info:git:*' stagedstr "%F{yellow}!"
+# zstyle ':vcs_info:git:*' unstagedstr "%F{red}+"
+# zstyle ':vcs_info:*' formats "%F{green}%c%u[%b]%f"
+# zstyle ':vcs_info:*' actionformats '[%b|%a]'
+# RPROMPT=$RPROMPT'${vcs_info_msg_0_}'
 
 # プロンプトの色付けは下記記事がわかりやすい
 # http://www.sakito.com/2011/11/zsh.html
