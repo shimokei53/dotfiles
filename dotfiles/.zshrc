@@ -84,6 +84,7 @@ alias amendc='git commit --amend --reuse-message=HEAD'
 alias prune='git remote prune origin'
 alias gs='git stash'
 alias gsl='git stash list'
+alias -g pushs='push --set-upstream origin $(git rev-parse --abbrev-ref HEAD)'
 # alias的に使う関数群
 gcm () { git commit -m "$*" }
 gsp () { git stash pop stash@{"$*"} }
@@ -93,10 +94,10 @@ pr () {
     org_repo_name=$( git config --get remote.origin.url  | sed -e s#git@github.com:## | sed -e s#.git## )
 
     # カレントブランチ名を取得
-    current_branch=$( git branch | grep '^*' | awk '{print $2}' )
+    current_branch=$(git rev-parse --abbrev-ref HEAD)
 
     # プルリク用URLを生成
-    echo https://github.com/$org_repo_name/pull/new/$current_branch
+    open "https://github.com/$org_repo_name/compare/develop...$current_branch?expand=1"
 }
 
 # colordiff
@@ -168,6 +169,7 @@ stty stop undef
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 PATH=$HOME/.rbenv/shims:$PATH # http://qiita.com/omega999/items/5dbea9571efad07754ae
+PATH=$HOME/.composer/vendor/bin:$PATH
 
 #=============================
 # source zsh-syntax-highlighting
@@ -185,7 +187,9 @@ alias cdd='cd $(git rev-parse --show-toplevel)'
 
 # pull request検索へのエイリアス
 function prsearch () {
-  open "https://github.com/skiyaki/skiyaki/pulls?q=$1"
+    # "組織名/プロジェクト名"を取得。e.g. sen-corporation/8122
+    org_repo_name=$( git config --get remote.origin.url  | sed -e s#git@github.com:## | sed -e s#.git## )
+    open "https://github.com/$org_repo_name/pulls?q=$1"
 }
 
 # 突然の死コマンドへのエイリアス
@@ -205,5 +209,21 @@ compdef hub=git
 # http://qiita.com/fieldville/items/e24500165be947db8eaa
 [[ -z "$WINDOW" && ! -z "$PS1" ]] && screen -U
 
+# set direnv
+# http://qiita.com/kompiro/items/5fc46089247a56243a62
+export EDITOR=nano
+eval "$(direnv hook zsh)"
+
+# set GLOBAL IP
+export GLOBAL_IP=$(/sbin/ifconfig en1 | grep "inet " | cut -f 2 -d " ")
+
+# alias symfony server run
+function run() {
+    echo 'cd web && php -d variables_order="EGPCS" -S $GLOBAL_IP:8000 ../vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/config/router_dev.php'
+    cd ~/ascreed/fs_backend/web && php -d variables_order="EGPCS" -S $GLOBAL_IP:8000 ../vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/config/router_dev.php
+}
+
 # cd main dir
-cd ~/ascreed
+cd ~/ascreed/fs_backend
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
