@@ -41,3 +41,17 @@ bind -c jumpto 2 select 12
 bind -c jumpto 3 select 13
 bind -c jumpto 4 select 14
 bind - command -c jumpto
+
+# copy mode keybind
+markkeys j=^N:k=^P:l=^F:0=^A:$=^E:^F=^V
+bindkey -m -t ^[v    stuff ^B
+bindkey -m    ^B     stuff h
+bindkey -m -t ^[a    stuff \^
+bindkey -m -t ^[f    stuff w
+bindkey -m -t ^[b    stuff b
+bindkey -m -t ^[0^[r stuff H
+# Nothing for 'M'
+bindkey -m -t ^[-^[r stuff L
+bindkey -m -t ^[<    stuff g
+bindkey -m -t ^[>    stuff G
+bindkey -m -t ^[d    stuff " e "

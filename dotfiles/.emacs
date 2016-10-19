@@ -64,13 +64,15 @@
 (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.twig?\\'" . web-mode))
 ;;; インデント数
 (defun web-mode-hook ()
   "Hooks for Web mode."
-  (setq web-mode-markup-indent-offset 4)
-;;(setq tab-width web-mode-markup-indent-offset)
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-css-indent-offset 2)
+  (setq tab-width web-mode-markup-indent-offset)
 ;;(setq indent-tabs-mode t)
-  (setq web-mode-enable-auto-pairing f)
+  (setq web-mode-enable-auto-pairing t)
 )
 (add-hook 'web-mode-hook 'web-mode-hook)
 
@@ -318,7 +320,7 @@
 
 ;;=== window resizer ===
 ;;=== http://d.hatena.ne.jp/khiker/20100119/window_resize ===
-(global-set-key "\C-c\C-r" 'my-window-resizer)
+(global-set-key "\C-c\C-v" 'my-window-resizer)
 (defun my-window-resizer ()
   "Control window size and position."
   (interactive)
@@ -367,7 +369,7 @@
              (expand-file-name "~/.emacs.d/site-lisp/yasnippet"))
 (require 'yasnippet)
 (setq yas-snippet-dirs
-      '("~/.emacs.d/site-lisp/yasnippet-snippets"
+      '("~/.emacs.d/vendor/elpa/yasnippet-20151011.1823/snippets"
         ))
 
 ;; yas起動

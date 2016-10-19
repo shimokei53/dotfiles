@@ -82,6 +82,7 @@ alias prune='git remote prune origin'
 alias gs='git stash'
 alias gsl='git stash list'
 alias -g pushs='push --set-upstream origin $(git rev-parse --abbrev-ref HEAD)'
+alias -g graph="log --graph -10 --branches --remotes --tags  --format=format:'%Cgreen%h %Creset• %<(75,trunc)%s (%cN, %cr) %Cred%d' --date-order"
 # alias的に使う関数群
 gcm () { git commit -m "$*" }
 gsp () { git stash pop stash@{"$*"} }
@@ -222,10 +223,10 @@ export GLOBAL_IP=$(/sbin/ifconfig en1 | grep "inet " | cut -f 2 -d " ")
 # alias symfony server run
 function run() {
     echo 'cd web && php -d variables_order="EGPCS" -S $GLOBAL_IP:8000 ../vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/config/router_dev.php'
-    cd ~/ascreed/fs_backend/web && php -d variables_order="EGPCS" -S $GLOBAL_IP:8000 ../vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/config/router_dev.php
+    cd ~/ascreed/tappli.server/web && php -d variables_order="EGPCS" -S $GLOBAL_IP:8000 ../vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/config/router_dev.php -vvv
 }
 
 # cd main dir
-cd ~/ascreed/fs_backend
+cd ~/ascreed/tappli.server
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
