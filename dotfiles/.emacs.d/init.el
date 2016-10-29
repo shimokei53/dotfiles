@@ -16,3 +16,7 @@
 ;; http://qiita.com/maangie/items/5a80ae50c13d14368a72
 (let ((gls "/usr/local/bin/gls"))
   (if (file-exists-p gls) (setq insert-directory-program gls)))
+
+;; http://qiita.com/takc923/items/c7a11ff30caedc4c5ba7
+(require 'magit)
+(global-set-key "\C-x v" 'magit-status)

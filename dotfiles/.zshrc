@@ -37,9 +37,6 @@ unsetopt promptcr
 # ..で上へあがれて便利。
 setopt auto_cd
 
-# 右側プロンプトはコピペするときに邪魔なのでやめる。
-#RPROMPT="[%~]"
-
 # Path
 PATH=$PATH:/home/smd/bin:$HOME/bin:/usr/local/bin:$HOME/local/bin:/usr/local/heroku/bin:$HOME/.composer/vendor/bin:
 
@@ -86,6 +83,8 @@ alias amendc='git commit --amend --reuse-message=HEAD'
 alias prune='git remote prune origin'
 alias gs='git stash'
 alias gsl='git stash list'
+alias -g pushs='push --set-upstream origin $(git rev-parse --abbrev-ref HEAD)'
+alias -g graph="log --graph -10 --branches --remotes --tags  --format=format:'%Cgreen%h %Creset• %<(75,trunc)%s (%cN, %cr) %Cred%d' --date-order"
 # alias的に使う関数群
 gcm () { git commit -m "$*" }
 gsp () { git stash pop stash@{"$*"} }
@@ -95,10 +94,10 @@ pr () {
     org_repo_name=$( git config --get remote.origin.url  | sed -e s#git@github.com:## | sed -e s#.git## )
 
     # カレントブランチ名を取得
-    current_branch=$( git branch | grep '^*' | awk '{print $2}' )
+    current_branch=$(git rev-parse --abbrev-ref HEAD)
 
     # プルリク用URLを生成
-    echo https://github.com/$org_repo_name/pull/new/$current_branch
+    open "https://github.com/$org_repo_name/compare/develop...$current_branch?expand=1"
 }
 
 # colordiff
@@ -133,6 +132,11 @@ function extract() {
 }
 alias -s {gz,tgz,zip,lzh,bz2,tbz,Z,tar,arj,xz}=extract
 
+# for screen
+alias sc='screen'
+
+# for nano 2.3.2
+alias nano='/usr/local/bin/nano'
 
 # for Git
 # http://d.hatena.ne.jp/mollifier/20100906/p1
@@ -146,14 +150,14 @@ precmd () {
     psvar[1]=$vcs_info_msg_0_
 }
 
-# for screen
-alias sc='screen'
-
-# for nano 2.3.2
-alias nano='/usr/local/bin/nano'
-
-#PROMPT="%n:%/%1(v|%F{green}%1v%f|)%% "
-
+# see http://tkengo.github.io/blog/2013/05/12/zsh-vcs-info/
+# setopt prompt_subst
+# zstyle ':vcs_info:git:*' check-for-changes true
+# zstyle ':vcs_info:git:*' stagedstr "%F{yellow}!"
+# zstyle ':vcs_info:git:*' unstagedstr "%F{red}+"
+# zstyle ':vcs_info:*' formats "%F{green}%c%u[%b]%f"
+# zstyle ':vcs_info:*' actionformats '[%b|%a]'
+# RPROMPT=$RPROMPT'${vcs_info_msg_0_}'
 
 # プロンプトの色付けは下記記事がわかりやすい
 # http://www.sakito.com/2011/11/zsh.html
@@ -170,6 +174,7 @@ stty stop undef
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 PATH=$HOME/.rbenv/shims:$PATH # http://qiita.com/omega999/items/5dbea9571efad07754ae
+PATH=$HOME/.composer/vendor/bin:$PATH
 
 #=============================
 # source zsh-syntax-highlighting
@@ -187,7 +192,9 @@ alias cdd='cd $(git rev-parse --show-toplevel)'
 
 # pull request検索へのエイリアス
 function prsearch () {
-  open "https://github.com/skiyaki/skiyaki/pulls?q=$1"
+    # "組織名/プロジェクト名"を取得。e.g. sen-corporation/8122
+    org_repo_name=$( git config --get remote.origin.url  | sed -e s#git@github.com:## | sed -e s#.git## )
+    open "https://github.com/$org_repo_name/pulls?q=$1"
 }
 
 # 突然の死コマンドへのエイリアス
@@ -218,3 +225,13 @@ eval "$(direnv hook zsh)"
 # cd main dir
 cd ~/ascreed
 
+# alias symfony server run
+function run() {
+    echo 'cd web && php -d variables_order="EGPCS" -S $GLOBAL_IP:8000 ../vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/config/router_dev.php'
+    cd ~/ascreed/tappli.server/web && php -d variables_order="EGPCS" -S $GLOBAL_IP:8000 ../vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/config/router_dev.php -vvv
+}
+
+# cd main dir
+cd ~/ascreed/tappli.server
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
