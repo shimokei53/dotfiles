@@ -2,6 +2,7 @@
 # export LANG=ja_JP.utf8
 
 # http://journal.mycom.co.jp/column/zsh/001/index.html
+# 補完ON
 autoload -U compinit
 compinit
 
@@ -10,6 +11,7 @@ compinit
 bindkey -e
 
 # http://0xcc.net/unimag/3/
+# 履歴
 zstyle ':completion:*:default' menu select=1
 
 # customize history
@@ -39,7 +41,7 @@ setopt auto_cd
 #RPROMPT="[%~]"
 
 # Path
-PATH=$PATH:/home/smd/bin:$HOME/bin:/usr/local/bin:$HOME/local/bin:/usr/local/heroku/bin:
+PATH=$PATH:/home/smd/bin:$HOME/bin:/usr/local/bin:$HOME/local/bin:/usr/local/heroku/bin:$HOME/.composer/vendor/bin:
 
 [ -f ~/.awsrc ] && . ~/.awsrc
 ## alias
@@ -205,5 +207,14 @@ compdef hub=git
 # http://qiita.com/fieldville/items/e24500165be947db8eaa
 [[ -z "$WINDOW" && ! -z "$PS1" ]] && screen -U
 
+# set GLOBAL IP
+export GLOBAL_IP=$(/sbin/ifconfig | grep inet | grep broadcast | cut -f 2 -d " ")
+
+# set direnv
+# http://qiita.com/kompiro/items/5fc46089247a56243a62
+export EDITOR=nano
+eval "$(direnv hook zsh)"
+
 # cd main dir
 cd ~/ascreed
+
