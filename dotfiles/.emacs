@@ -68,7 +68,7 @@
 ;;; インデント数
 (defun web-mode-hook ()
   "Hooks for Web mode."
-  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-markup-indent-offset 4)
   (setq web-mode-css-indent-offset 2)
   (setq tab-width web-mode-markup-indent-offset)
 ;;(setq indent-tabs-mode t)
@@ -86,10 +86,16 @@
 ;; hide date time
 (display-time-mode 0)
 
-;; 最終行に必ず一行挿入する
-(setq require-final-newline t)
+;; 末尾改行オフ
+(setq require-final-newline nil)
 
 (setq backup-inhibited t)
+
+;; Language settings
+(set-language-environment 'Japanese)
+(prefer-coding-system 'utf-8-unix)
+(set-keyboard-coding-system 'utf-8-unix)
+(set-terminal-coding-system 'utf-8-unix)
 
 ;; iswitchb-mode on
 (iswitchb-mode t)
@@ -100,12 +106,6 @@
         (define-key iswitchb-mode-map "\C-p" 'iswitchb-prev-match)
         (define-key iswitchb-mode-map "\C-f" 'iswitchb-next-match)
         (define-key iswitchb-mode-map "\C-b" 'iswitchb-prev-match)))
-
-;; Language settings
-(set-language-environment 'Japanese)
-(prefer-coding-system 'utf-8-unix)
-(set-keyboard-coding-system 'utf-8-unix)
-(set-terminal-coding-system 'utf-8-unix)
 
 ;; colorize region  http://blog.livedoor.jp/t100life/archives/51680860.html
 (transient-mark-mode 1)

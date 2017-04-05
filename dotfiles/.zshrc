@@ -95,7 +95,7 @@ pr () {
     current_branch=$(git rev-parse --abbrev-ref HEAD)
 
     # プルリク用URLを生成
-    open "https://github.com/$org_repo_name/compare/develop...$current_branch?expand=1"
+    open "https://github.com/$org_repo_name/compare/master...$current_branch?expand=1"
 }
 
 # colordiff
@@ -218,7 +218,14 @@ export EDITOR=nano
 eval "$(direnv hook zsh)"
 
 # set GLOBAL IP
-export GLOBAL_IP=$(/sbin/ifconfig en1 | grep "inet " | cut -f 2 -d " ")
+export GLOBAL_IP=$(/sbin/ifconfig en0 | grep "inet " | cut -f 2 -d " ")
+
+# tappli DB設定 local
+export SYMFONY__DATABASE__HOST=127.0.0.1
+export SYMFONY__DATABASE__PORT=null
+export SYMFONY__DATABASE__NAME=symfony
+export SYMFONY__DATABASE__USER=root
+export SYMFONY__DATABASE__PASSWORD=""
 
 # alias symfony server run
 function run() {
@@ -230,3 +237,10 @@ function run() {
 cd ~/ascreed/tappli.server
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
+
+# use pear & pecl
+export PATH="$PATH:$HOME/pear/bin"
+
+# use ElasticSearch
+# http://qiita.com/y-temp4/items/ffafe1c0ea8a29ce8707
+export PATH="$PATH:/usr/local/opt/elasticsearch/libexec/bin"
