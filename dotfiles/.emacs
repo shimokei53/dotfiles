@@ -64,15 +64,13 @@
 (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.twig?\\'" . web-mode))
 ;;; インデント数
 (defun web-mode-hook ()
   "Hooks for Web mode."
   (setq web-mode-markup-indent-offset 4)
-  (setq web-mode-css-indent-offset 2)
-  (setq tab-width web-mode-markup-indent-offset)
+;;(setq tab-width web-mode-markup-indent-offset)
 ;;(setq indent-tabs-mode t)
-  (setq web-mode-enable-auto-pairing t)
+  (setq web-mode-enable-auto-pairing f)
 )
 (add-hook 'web-mode-hook 'web-mode-hook)
 
@@ -98,14 +96,14 @@
 (set-terminal-coding-system 'utf-8-unix)
 
 ;; iswitchb-mode on
-(iswitchb-mode t)
+;; (iswitchb-mode t)
 ;;; C-f, C-b, C-n, C-p で候補を切り替えることができるように。
-(add-hook 'iswitchb-define-mode-map-hook
-      (lambda ()
-        (define-key iswitchb-mode-map "\C-n" 'iswitchb-next-match)
-        (define-key iswitchb-mode-map "\C-p" 'iswitchb-prev-match)
-        (define-key iswitchb-mode-map "\C-f" 'iswitchb-next-match)
-        (define-key iswitchb-mode-map "\C-b" 'iswitchb-prev-match)))
+;; (add-hook 'iswitchb-define-mode-map-hook
+;;       (lambda ()
+;;         (define-key iswitchb-mode-map "\C-n" 'iswitchb-next-match)
+;;         (define-key iswitchb-mode-map "\C-p" 'iswitchb-prev-match)
+;;         (define-key iswitchb-mode-map "\C-f" 'iswitchb-next-match)
+;;         (define-key iswitchb-mode-map "\C-b" 'iswitchb-prev-match)))
 
 ;; colorize region  http://blog.livedoor.jp/t100life/archives/51680860.html
 (transient-mark-mode 1)
@@ -117,6 +115,9 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(indent-tabs-mode nil)
+ '(package-selected-packages
+   (quote
+    (ac-php yasnippet wgrep-ag web-mode shell-pop php-mode php-completion auto-install ag)))
  '(safe-local-variable-values (quote ((encoding . utf-8)))))
 
 ;; show line-number
@@ -369,7 +370,7 @@
              (expand-file-name "~/.emacs.d/site-lisp/yasnippet"))
 (require 'yasnippet)
 (setq yas-snippet-dirs
-      '("~/.emacs.d/vendor/elpa/yasnippet-20151011.1823/snippets"
+      '("~/.emacs.d/site-lisp/yasnippet-snippets"
         ))
 
 ;; yas起動
@@ -388,3 +389,4 @@
   (diff-auto-refine-mode t))
 (add-hook 'diff-mode-hook 'diff-mode-refine-automatically)
 (put 'set-goal-column 'disabled nil)
+
