@@ -239,7 +239,7 @@ function run() {
 }
 
 # cd main dir
-cd ~/ascreed/tappli.server
+# cd ~/ascreed/tappli.server
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
 
@@ -249,3 +249,6 @@ export PATH="$PATH:$HOME/pear/bin"
 # use ElasticSearch
 # http://qiita.com/y-temp4/items/ffafe1c0ea8a29ce8707
 export PATH="$PATH:/usr/local/opt/elasticsearch/libexec/bin"
+
+# use php7.4
+export PKG_CONFIG_PATH="/usr/local/opt/icu4c/lib/pkgconfig:/usr/local/opt/krb5/lib/pkgconfig:/usr/local/opt/openssl@1.1/lib/pkgconfig"
