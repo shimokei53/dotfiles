@@ -4,7 +4,7 @@
 # http://journal.mycom.co.jp/column/zsh/001/index.html
 # 補完ON
 autoload -U compinit
-compinit
+compinit -u
 
 # http://0xcc.net/unimag/3/
 # keybind like Emacs
@@ -252,3 +252,14 @@ export PATH="$PATH:/usr/local/opt/elasticsearch/libexec/bin"
 
 # use php7.4
 export PKG_CONFIG_PATH="/usr/local/opt/icu4c/lib/pkgconfig:/usr/local/opt/krb5/lib/pkgconfig:/usr/local/opt/openssl@1.1/lib/pkgconfig"
+
+# phpenv
+export PHPENV_ROOT="$HOME/.phpenv"
+export PATH="$PHPENV_ROOT/bin:$PATH"
+eval "$(phpenv init -)"
+
+export PATH="/usr/local/opt/mysql@5.7/bin:$PATH"
+export PATH="/usr/local/opt/bison/bin:$PATH"
+export PATH="/usr/local/opt/bzip2/bin:$PATH"
+export PATH="/usr/local/opt/libiconv/bin:$PATH"
+export PKG_CONFIG_PATH="/usr/local/opt/libxml2/lib/pkgconfig:$PKG_CONFIG_PATH"
